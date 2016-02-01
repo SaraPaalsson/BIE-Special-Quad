@@ -4,11 +4,10 @@ using JLD
 function laplace_main()
 	println("Starting...")
 
+	filename = "test"
+
 	#Setup domain and initialize parameters
-	(z,T) = laplace_init()
-	println(z)
-	println(T)
-	
+	(dropInfo) = laplace_init(filename)
 
 	#Step and solve, for Laplace only one
 	laplace_computedensity()
@@ -32,9 +31,11 @@ function laplace_post()
 	println("Post processing...")
 end
 
-function laplace_init()
+function laplace_init(file_in)
 	println("Initializing domain...")
-	filename = "indata/test.jld" #Which file to loadla
+	tmp = "indata/"
+	tmp2 = ".jld"
+	filename = tmp*file_in*tmp2 #Which file to load
 	dropInfo = load(filename)	
-	return dropInfo["z"], dropInfo["T"]
+	return dropInfo
 end

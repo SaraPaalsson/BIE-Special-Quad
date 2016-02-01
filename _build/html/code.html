@@ -1,0 +1,135 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Initialization &mdash; BIE Special Quadrature 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="BIE Special Quadrature 1.0 documentation" href="index.html" />
+    <link rel="prev" title="Introduction" href="intro.html" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+
+  </head>
+  <body role="document">  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="initialization">
+<h1>Initialization<a class="headerlink" href="#initialization" title="Permalink to this headline">¶</a></h1>
+<p>To initialize our computations, the computational domain will be set up and parametrized. This setup needs to be done once for each test case and is then saved in <strong>indata/filename</strong>.  This is done by <em>indata_setup</em>:</p>
+<div class="highlight-julia"><div class="highlight"><pre><span class="k">function</span><span class="nf"> indata_setup</span><span class="p">(</span><span class="n">Npanels</span><span class="p">,</span><span class="n">geomShape</span><span class="p">,</span><span class="n">filename_in</span><span class="p">)</span>
+<span class="cm">#= Compute initialization data and settings</span>
+<span class="cm">        Input:  -Npanels, number of panels on interface</span>
+<span class="cm">                -geomShape, desired shape of interface (so far only starfish allowed)</span>
+<span class="cm">        Saves parameters, settings and initial disc. points to indata/filename.jld</span>
+<span class="cm">=#</span>
+</pre></div>
+</div>
+<p>The starfish domain is represented by a function computing the interface points for a given parametrization, as well as its first and second order derivative.</p>
+<p>To compute the discretized points as well as the quadrature weights for the whole interface, <em>domain_setup</em> is used:</p>
+<div class="highlight-julia"><div class="highlight"><pre><span class="k">function</span><span class="nf"> domain_setup</span><span class="p">(</span><span class="n">Np</span><span class="p">,</span><span class="n">f</span><span class="p">)</span>
+<span class="cm">#=      Compute disc.points and their quadrature weights for</span>
+<span class="cm">        parametrization f</span>
+<span class="cm">        Input:          -Np, number of G.-L panels</span>
+<span class="cm">                        -f, parametrization function</span>
+<span class="cm">        Output:         -z, disc. points (16 point G.-L)</span>
+<span class="cm">                        -W, quadrature weights (16 point G.-L)</span>
+<span class="cm">                        -panels, panel division in [0,2pi]</span>
+<span class="cm">                        -parm, parametrization vector [0,2pi]</span>
+<span class="cm">=#</span>
+</pre></div>
+</div>
+<p>Here, the panels are constructed. On each panel, 16 Gauss-Legendre points are computed together with their weights by <em>gaussleg16</em>:</p>
+<div class="highlight-julia"><div class="highlight"><pre><span class="k">function</span><span class="nf"> gaussleg16</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">)</span>
+<span class="cm">#=      Compute 16 point Gauss-Legendre quadrature nodes and weights on</span>
+<span class="cm">        interval [a,b] (as done in Trefethen)</span>
+<span class="cm">        Input:          -a,b, start and end of interval resp.</span>
+<span class="cm">        Output:         -nodes, quadrature points on interv. (a,b) (16-p G.-L.)</span>
+<span class="cm">                        -weights, quadrature weights on interv. (a,b) (16-p G.-L.)</span>
+<span class="cm">=#</span>
+</pre></div>
+</div>
+<p>Needed packages for these computations are:</p>
+<ul class="simple">
+<li><a class="reference external" href="https://github.com/JuliaLang/JLD.jl">JLD</a></li>
+</ul>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="intro.html" title="previous chapter">Introduction</a></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/code.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, Sara.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.6</a>
+      
+      |
+      <a href="_sources/code.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

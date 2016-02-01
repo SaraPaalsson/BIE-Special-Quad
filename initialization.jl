@@ -18,8 +18,9 @@ function indata_setup(Npanels,geomShape,filename_in)
 
 	#Save data to file for later use
 	tmp = "indata/"
-	filename = tmp * filename_in
-	save(filename,"Npanels",Npanels,"z",z,"parm",parm)
+	tmp2 = ".jld"
+	filename = tmp * filename_in * tmp2
+	save(filename,"z",z,"W",W,"Npanels",Npanels,"panels",panels,"parm",parm)
 end
 
 function starfish_parm(tvec)
