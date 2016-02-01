@@ -4,7 +4,7 @@ using JLD
 function laplace_main()
 	println("Starting...")
 
-	filename = "test"
+	filename = "starfish"
 
 	#Setup domain and initialize parameters
 	(dropInfo) = laplace_init(filename)

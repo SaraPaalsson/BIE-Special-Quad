@@ -1,7 +1,7 @@
 include("initialization.jl")
 
 # Setup starfish test domain
-	Npanels = 20
+	Npanels = 10
 	geomShape = "starfish"
-	filename = "test"
+	filename = "starfish"
 	indata_setup(Npanels,geomShape,filename)

@@ -1,7 +1,9 @@
 using JLD
 
+module initialization
+export setup, starfish_parm, gaussleg16
 
-function indata_setup(Npanels,geomShape,filename_in)
+function setup(Npanels,geomShape,filename_in)
 #= Compute initialization data and settings 
 	Input:		-Npanels, number of panels on interface
 				-geomShape, desired shape of interface (so far only starfish allowed) 
@@ -11,6 +13,8 @@ function indata_setup(Npanels,geomShape,filename_in)
 	#Parametrization		
 	if geomShape == "starfish" #Starfish domain
 		fparm(t) = starfish_parm(t)
+	else
+		error("Not defined parametrization")
 	end
 
 	#Distribute G.-L points on interface 
@@ -90,5 +94,7 @@ interval [a,b] (as done in Trefethen)
 	nodes = (a*(1-nodes)+b*(1+nodes))/2
 	weights =(b-a)/2*weights
 	return nodes,weights
+end
+
 end
 
