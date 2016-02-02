@@ -1,11 +1,11 @@
 #initialization.jl
 using JLD
 
-#module initialization
-#export setup, starfish_parm, gaussleg16
+module initialization
+export setup, starfish_parm, gaussleg16
 
 
-@doc"""
+"""
 Setup domain and distribute points.
 
 Arguments
@@ -106,5 +106,5 @@ interval [a,b] (as done in Trefethen)
 	return nodes,weights
 end
 
-#end
+end
 
