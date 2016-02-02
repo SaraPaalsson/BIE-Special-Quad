@@ -5,7 +5,7 @@ module initialization
 export setup, starfish_parm, gaussleg16
 
 
-"""
+@doc """
 Setup domain and distribute points.
 
 Arguments
