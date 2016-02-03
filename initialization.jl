@@ -1,12 +1,13 @@
 #initialization.jl
 
-using JLD
 
 #=
 This is my initialization module.
 =#
 module initialization
 export setup, starfish_parm, gaussleg16
+
+using JLD
 
 
 function setup(Npanels,geomShape,filename_in)
@@ -80,8 +81,8 @@ function gaussleg16(a,b)
 #=	Compute 16 point Gauss-Legendre quadrature nodes and weights on 
 interval [a,b] (as done in Trefethen) 
 	Input:		-a,b, start and end of interval resp.
-	Output:		-nodes, quadrature points on interv. (a,b) (16-p G.-L.)
-				-weights, quadrature weights on interv. (a,b) (16-p G.-L.)
+	Output:		-nodes, Array{Float64,1} quadrature points on interv. (a,b) (16-p G.-L.)
+				-weights, Array{Float64,1} quadrature weights on interv. (a,b) (16-p G.-L.)
 =#
 	nvec = 1:15
 	beta = 0.5*(1-(2.0*nvec).^(-2)).^(-1/2)
