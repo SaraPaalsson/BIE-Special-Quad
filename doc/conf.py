@@ -22,6 +22,8 @@ import juliadoc
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #sys.path.insert(0, os.path.abspath('.'))
 
+sys.path.insert(0, os.path.abspath('/Users/sara/Documents/toolbox_SESE/BIE-Special-Quad/initialization.jl'))
+
 # -- General configuration ------------------------------------------------
 
 # If your documentation needs a minimal Sphinx version, state it here.
@@ -111,6 +113,10 @@ pygments_style = 'sphinx'
 # If true, `todo` and `todoList` produce output, else they produce nothing.
 todo_include_todos = False
 
+#TESTAR
+primary_domain = 'jl'
+highlight_language = 'julia'
+
 
 # -- Options for HTML output ----------------------------------------------
 
@@ -118,6 +124,7 @@ todo_include_todos = False
 # a list of builtin themes.
 #html_theme = 'alabaster'
 html_theme = 'sphinx_rtd_theme'
+
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
 # documentation.

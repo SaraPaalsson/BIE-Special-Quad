@@ -1,18 +1,14 @@
 #initialization.jl
+
 using JLD
 
+#=
+This is my initialization module.
+=#
 module initialization
 export setup, starfish_parm, gaussleg16
 
 
-@doc """
-Setup domain and distribute points.
-
-Arguments
------------
-Npanels
-	Number of panels
-""" ->
 function setup(Npanels,geomShape,filename_in)
 #= Compute initialization data and settings 
 	Input:		-Npanels, number of panels on interface

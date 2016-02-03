@@ -1,3 +1,5 @@
 glW.mat
 useful_init.jl
 indata/*
+_build/
+src/
