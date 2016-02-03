@@ -1,7 +1,7 @@
 using FactCheck
 using JLD
 
-include("initialization.jl")
+include("../initialization.jl")
 
 facts("Initialization") do
 	context("Quadrature") do
@@ -25,9 +25,9 @@ facts("Initialization") do
 		@fact nodes_ok --> 16 "G.-L. nodes wrong"
 	end
 	context("Parametrization") do
-		testz = load("indata/testdata.jld","zparm")
-		testzp = load("indata/testdata.jld","zparmp")
-		testzpp = load("indata/testdata.jld","zparmpp")
+		testz = load("tests/testdata.jld","zparm")
+		testzp = load("tests/testdata.jld","zparmp")
+		testzpp = load("tests/testdata.jld","zparmpp")
 		tvec = linspace(0,2*pi,101)
 		(z,zp,zpp) = initialization.starfish_parm(tvec)
 		@fact z --> roughly(testz) "Starfish parametrization broken"

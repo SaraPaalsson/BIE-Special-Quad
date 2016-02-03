@@ -84,8 +84,11 @@ interval [a,b] (as done in Trefethen)
 	Output:		-nodes, Array{Float64,1} quadrature points on interv. (a,b) (16-p G.-L.)
 				-weights, Array{Float64,1} quadrature weights on interv. (a,b) (16-p G.-L.)
 =#
-	nvec = 1:15
-	beta = 0.5*(1-(2.0*nvec).^(-2)).^(-1/2)
+	beta = zeros(1,15)
+	for (nvec in 1:15)
+		beta[nvec] = 0.5*(1-(2.0*nvec)^(-2))^(-1/2)
+	end
+	beta = vec(beta)
 	Tn = diagm(beta,-1) + diagm(beta,1)
 	(D,V) = eig(Tn)
 	booltmp = !(D.==0)
@@ -95,7 +98,10 @@ interval [a,b] (as done in Trefethen)
 			push!(nodes,D[i])
 		end
 	end
-	weights = (2*V[1,:].^2)'
+	weights = zeros(16,1)
+	for (i in 1:16)
+		weights[i] = 2*V[1,i]^2
+	end
 	#= NB here we could use our saved W16 weights and remap them instead... 
 	but we won't save much time doing so =#
 	nodes = (a*(1-nodes)+b*(1+nodes))/2
