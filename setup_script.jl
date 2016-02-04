@@ -4,4 +4,4 @@ include("initialization.jl")
 	Npanels = 10
 	geomShape = "starfish"
 	filename = "starfish"
-	indata_setup(Npanels,geomShape,filename)
+	initialization.setup(Npanels,geomShape,filename)

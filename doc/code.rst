@@ -35,6 +35,16 @@ Here, the panels are constructed. On each panel, 16 Gauss-Legendre points are co
 				-weights, quadrature weights on interv. (a,b) (16-p G.-L.)
 	=#
 
+To fill the domain with computational points on which to evaluate the error with normal and special quadrature respectively, *filldomain* is used: ::
+	
+	function filldomain(geomShape)
+	#= Fills the domain described with compuational points. 
+	Discretize the radius r and parametriation t.
+		Input: 		geomShape, domain type to discretize
+		Output: 	z, computational points
+				Zplot, points z but distributed on matrix form for pcolor plotting
+	=#
+
 Needed packages for these computations are: 
 
 * `JLD <https://github.com/JuliaLang/JLD.jl>`_

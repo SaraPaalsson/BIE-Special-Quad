@@ -17,6 +17,9 @@ function setup(Npanels,geomShape,filename_in)
 	Saves parameters, settings and initial disc. points to indata/filename.jld
 =#
 
+	#Reference point for solution
+	z_ref = 1.5+1.5*im;
+
 	#Parametrization		
 	if geomShape == "starfish" #Starfish domain
 		fparm(t) = starfish_parm(t)
@@ -25,14 +28,52 @@ function setup(Npanels,geomShape,filename_in)
 	end
 
 	#Distribute G.-L points on interface 
- 	(z,W,panels,parm) = domain_setup(Npanels,fparm) #Disc. points and weights
+ 	(z,W,panels,panelsz,parm,zp,zpp) = domain_setup(Npanels,fparm) #Disc. points and weights
 
 	#Save data to file for later use
 	tmp = "indata/"
 	tmp2 = ".jld"
 	filename = tmp * filename_in * tmp2
-	save(filename,"z",z,"W",W,"Npanels",Npanels,"panels",panels,"parm",parm)
+	save(filename,"z",z,"W",W,"Npanels",Npanels,"panels",panels,"panelsz",panelsz,"parm",parm,"zref",z_ref,"zp",zp,"zpp",zpp)
 end
+
+function filldomain(geomShape)
+#= Fills the domain described with compuational points. 
+Discretize the radius r and parametriation t.
+	Input: 		geomShape, domain type to discretize
+	Output: 	z, computational points
+				Zplot, points z but distributed on matrix form for pcolor plotting
+=#
+	println("Filling the domain with computational points...")
+	#Parametrization		
+	if geomShape == "starfish" #Starfish domain
+		f(t) = initialization.starfish_parm(t)
+	else
+		error("Not defined parametrization")
+	end
+
+
+	fillLayers = 10; #number of layers to fill the domain with
+	r = linspace(0,0.9999,fillLayers)
+
+	fillparm = 12; #Number of parametrization points on each layer
+	t = linspace(0,2*pi,fillparm)
+
+	(tmp,tmp2,tmp3) = f(t)
+	zcomp = zeros(fillLayers*fillparm,1); zcomp = complex(zcomp)
+	R = zeros(fillparm,fillLayers); T = zeros(fillparm,fillLayers)
+	Zplot = zeros(fillparm,fillLayers); Zplot = complex(Zplot)
+	for (i in 1:fillLayers)
+		for (j in 1:fillparm)
+			zcomp[(i-1)*fillparm+j] = r[i]*tmp[j]
+			Zplot[j,i] = r[i]*tmp[j]   
+		end
+	end
+	return zcomp,Zplot
+end
+
+
+
 
 function starfish_parm(tvec)
 #=  Parametrize interface as a starfish 
@@ -66,15 +107,20 @@ parametrization f
 =#
 	panels = linspace(0,2*pi,Np+1) #Divide interface into panels
 
-	parm = []; z = []; W = []
+	parm = []; z = []; W = []; zp = []; zpp = []
 	for (i in 1:Np)
 		(nodes,weights) = gaussleg16(panels[i],panels[i+1])
 		append!(parm,nodes)
 		(tmp,tmp1,tmp2) = f(nodes)
 		append!(z,tmp)
+		append!(zp,tmp1)
+		append!(zpp,tmp2)
 		append!(W,vec(weights))
 	end
-	return z,W,panels,parm
+
+	(panelsz,tmp1,tmp2) = f(panels)
+
+	return z,W,panels,panelsz,parm,zp, zpp
 end
 
 function gaussleg16(a,b)
