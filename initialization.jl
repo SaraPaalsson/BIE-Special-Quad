@@ -60,9 +60,9 @@ Discretize the radius r and parametriation t.
 	t = linspace(0,2*pi,fillparm)
 
 	(tmp,tmp2,tmp3) = f(t)
-	zcomp = zeros(fillLayers*fillparm,1); zcomp = complex(zcomp)
+	zcomp = zeros(Complex{Float64},fillLayers*fillparm)
 	R = zeros(fillparm,fillLayers); T = zeros(fillparm,fillLayers)
-	Zplot = zeros(fillparm,fillLayers); Zplot = complex(Zplot)
+	Zplot = zeros(Complex{Float64},fillparm,fillLayers)
 	for (i in 1:fillLayers)
 		for (j in 1:fillparm)
 			zcomp[(i-1)*fillparm+j] = r[i]*tmp[j]
@@ -81,9 +81,9 @@ function starfish_parm(tvec)
 	Output:		-tau, interface points
 				-taup,taupp, first and second derivative of disc. points
 =#
-	tau = zeros(size(tvec)); tau = complex(tau)
-	taup = zeros(size(tvec)); taup = complex(taup)
-	taupp = zeros(size(tvec)); taupp = complex(taupp)
+	tau = zeros(Complex{Float64},size(tvec))
+	taup = zeros(Complex{Float64},size(tvec))
+	taupp = zeros(Complex{Float64},size(tvec))
 	for (k in 1:size(tvec,1))
 		t = tvec[k]
 		tau[k] = (1+0.3*cos(5*t)).*exp(im*t)
