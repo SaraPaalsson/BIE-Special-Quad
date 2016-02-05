@@ -1,7 +1,10 @@
 using FactCheck
 using JLD
 
-include("../initialization.jl")
+include("../src/initialization.jl")
+include("../src/laplace_main.jl")
+include("../src/readtextvariable.jl")
+include("../src/spec_quad.jl")
 
 facts("Initialization") do
 	context("Quadrature") do
@@ -25,14 +28,63 @@ facts("Initialization") do
 		@fact nodes_ok --> 16 "G.-L. nodes wrong"
 	end
 	context("Parametrization") do
-		testz = load("tests/testdata.jld","zparm")
-		testzp = load("tests/testdata.jld","zparmp")
-		testzpp = load("tests/testdata.jld","zparmpp")
+		testz = load("test_para.jld","zparm")
+		testzp = load("test_para.jld","zparmp")
+		testzpp = load("test_Para.jld","zparmpp")
 		tvec = linspace(0,2*pi,101)
 		(z,zp,zpp) = initialization.starfish_parm(tvec)
 		@fact z --> roughly(testz) "Starfish parametrization broken"
 		@fact zp --> roughly(testzp) "Starfish parametrization broken, first derivative"
 		@fact zpp --> roughly(testzpp) "Starfish parametrization broken, second derivative"
+	end
+end
+
+#SETTINGS FOR FOLLWING TESTS
+fillInfo = Dict("r0" => 0, "rL" => 0.9999, "fillLayers" => 5, "fillparm" => 50)
+dropInfo = Dict("fillInfo" => fillInfo,"zref" => 1.5+1.5*im)
+plotInfo = initialization.filldomain("starfish",dropInfo)
+
+facts("Computational domain") do
+	context("Distribution of points") do
+		zr = real(plotInfo["domz"]); zim = imag(plotInfo["domz"])
+		testdomz = readtextvariable("testdomain_z.txt")
+		N = length(testdomz)
+		ztestr  = testdomz[1:N/2]; ztestim = testdomz[N/2+1:end]
+		@fact zr --> roughly(ztestr); "Computational points wrong"
+		@fact zim --> roughly(ztestim); "Computational points wrong"
+		uk = laplace_compsol(plotInfo,dropInfo)
+		uktest =  readtextvariable("testdomain_uexact.txt")
+		@fact uk --> roughly(uktest); "Exact velocity computed wrongly"
+	end
+end
+
+facts("Solving BIE") do
+		Npanels = 10; N = 16*Npanels; zref = 1.5+1.5*im
+		tmp = readtextvariable("testBIE_z.txt")
+		z = tmp[1:N]+im*tmp[N+1:end]
+		tmp = readtextvariable("testBIE_zp.txt")
+		zp = tmp[1:N]+im*tmp[N+1:end]
+		tmp = readtextvariable("testBIE_zpp.txt")
+		zpp = tmp[1:N]+im*tmp[N+1:end]
+		W = readtextvariable("testBIE_W.txt")
+		panels = readtextvariable("testspecq_pan.txt")
+		dropInfo = Dict("Npanels" => Npanels, "z" => z, "zp" => zp, "zpp" => zpp, "W" => W, "zref" => zref,"fillInfo" => fillInfo,"panels"=>panels)
+		omegatest = readtextvariable("testBIE_omega.txt")
+		utest = readtextvariable("testBIE_unorm.txt")
+
+	context("Complex density") do
+		omega = laplace_computedensity(dropInfo)
+		@fact omega --> roughly(omegatest) "BIE density wrong"
+		plotInfo = initialization.filldomain("starfish",dropInfo)
+		unorm = laplace_computeNormquad(omegatest,dropInfo,plotInfo)
+		@fact unorm --> roughly(utest)
+	end
+
+	context("Special quadrature") do
+		uspecq_test = readtextvariable("testspecq_u.txt")
+		uspecq = laplace_computeSpecquad(omegatest,dropInfo,plotInfo,utest)
+		println(norm(uspecq-uspecq_test,Inf))
+		@fact uspecq --> roughly(uspecq_test)
 	end
 end
 
